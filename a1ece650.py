@@ -16,6 +16,12 @@ def main():
 
     print 'Finished reading input'
     # return exit code 0 on successful termination
+
+
+
+
+
+    dkdkf
     sys.exit(0)
 
 if __name__ == '__main__':
