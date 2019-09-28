@@ -1,5 +1,6 @@
 import re
 import copy
+import sys
 class Vertex(object):
     def __init__(self, x, y):
         self.x_coordinate = float(x)
@@ -101,26 +102,8 @@ class Street_vertices_set(object):
 
 streets_vertices_list=[]
 streets_segments_list=[]
-# streets_vertices_set=set()
-"""
-{(,),(,),...}
-"""
-
-
-
-# streets_vertices_dict={}
-#do not care about:
-
-# streets_segments_list_final_final_final=[]
-# vertices_not_repeated_list_final=[]
-# segments_not_repeated_list_final=[]
-
 
 def input_parser():
-    """
-    input: a command line ended with ENTER key
-    :return: go to differernt sub functions
-    """
     prompt="\nPlease input a command line:"
     prompt+="\nEnter 'q' to end the program.\n"
     i=""
@@ -134,21 +117,19 @@ def input_parser():
 
         if a_command_re.match(i):
             add_a_street(i)
-
-
         elif c_command_re.match(i):
             change_a_street(i)
         elif r_command_re.match(i):
             remove_a_street(i)
-
         elif g_command_re.match(i):
-
             generate_a_street(find_all_intersections_1(streets_segments_list),find_all_intersections_2(streets_segments_list))
+        elif i=='q':
+            sys.exit(0)
         else:
-            print("Wrong input, input again!!")
+            print("\nWrong input, input again!!")
 
 def generate_a_street(streets_vertices_list_final, streets_segments_list_final_2):
-    print("V={")
+    print("V = {")
     for i in streets_vertices_list_final:
         print("{0:.2f}_{1:.2f} : {2}".format(i.x_coordinate,i.y_coordinate,i))
         # print(f"{i.x_coordinate}_{i.y_coordinate} : {i}")
@@ -157,18 +138,14 @@ def generate_a_street(streets_vertices_list_final, streets_segments_list_final_2
     print("E = {")
     for j in streets_segments_list_final_2:
         # print(f"<{j.vertex_1.x_coordinate}_{j.vertex_1.y_coordinate} , {j.vertex_2.x_coordinate}_{j.vertex_2.y_coordinate}>, ")
-        print("< {0:.2f}_{1:.2f} , {2:.2f}_{3:.2f} >".format(j.vertex_1.x_coordinate,j.vertex_1.y_coordinate,j.vertex_2.x_coordinate,j.vertex_2.y_coordinate))
+        print("<{0:.2f}_{1:.2f} , {2:.2f}_{3:.2f}>,".format(j.vertex_1.x_coordinate,j.vertex_1.y_coordinate,j.vertex_2.x_coordinate,j.vertex_2.y_coordinate))
     print("}")
 
 def add_a_street_vertices(i):
     k=3
-    # while i[k]!=chr(34):
     while i[k] != '\"':
         k=k+1
-    # type(k)
     street_name=i[3:k]
-    # print(street_name)
-    # print(len(i))
     v=Vertex(1,1)
     sv=Street_vertices(street_name,v)
     sv.delete_a_vertex(v)
@@ -198,14 +175,7 @@ def add_a_street_vertices(i):
 
 def add_a_street_segments(i):
     streets_vertices_list_temp = []
-    """
-    vertices_list:[(2,-1), (2, 2), (5, 5),(5,6),(3,8)]
-
-    :return:
-    edges_list[[(2,-1), (2, 2)],[(2, 2), (5, 5)],...]
-    """
     k = 3
-    # while i[k]!=chr(34):
     while i[k] != '\"':
         k = k + 1
     # type(k)
@@ -242,9 +212,6 @@ def add_a_street_segments(i):
             sv.add_a_vertex(Vertex(vertex_x,vertex_y))
         k=k+1
     streets_vertices_list_temp.append(sv)
-
-
-
     # print(streets_vertices_list_temp)
     for i in range(len(streets_vertices_list_temp)):
         sv= streets_vertices_list_temp[i]
@@ -255,49 +222,23 @@ def add_a_street_segments(i):
             b=sv.output_first_vertex()
             c=Segment(a,b)
             ss.add_a_segment(c)
-    # while sv in streets_vertices_list:
-    #     print(sv)
-    #     a=sv.output_first_vertex()
-    #     sv.delete_a_vertex(a)
-    #     # print(sv)
-    #     b=sv.output_first_vertex()
-    #     c=Segment(a,b)
-    #     ss.add_a_segment(c)
-
-    # while len(sv.list)!=1:
-    #     a=sv.output_first_vertex()
-    #     sv.delete_a_vertex(a)
-    #     # print(sv)
-    #     b=sv.output_first_vertex()
-    #     c=Segment(a,b)
-    #     ss.add_a_segment(c)
-    # streets_segments_list.append(ss)
-    # # print(streets_segments_list)
-
     streets_segments_list.append(ss)
     # print(streets_segments_list)
 
 def add_a_street(i):
     add_a_street_vertices(i)
     add_a_street_segments(i)
-    print(streets_vertices_list)
-    print(streets_segments_list)
+    # print(streets_vertices_list)
+    # print(streets_segments_list)
 
 def change_a_street(i):
     remove_a_street(i)
     add_a_street_vertices(i)
     add_a_street_segments(i)
-    print(streets_vertices_list)
-    print(streets_segments_list)
+    # print(streets_vertices_list)
+    # print(streets_segments_list)
 def remove_a_street(i):
-    '''
-    :param i: a command line without the beginning and ending strips
-    :return:
-    a dictionary: key: street name; value: [[,],[,],...]
-    there is only one dictionary for all 4 commands
-    '''
     k=3
-    # while i[k]!=chr(34):
     while i[k] != '\"':
         k=k+1
     # type(k)
@@ -318,19 +259,11 @@ def remove_a_street(i):
         if f==0 and streets_segments_list[t].name==street_name:
             streets_segments_list.remove(streets_segments_list[t])
             f=1
-
-    print(streets_vertices_list)
-    print(streets_segments_list)
+    # print(streets_vertices_list)
+    # print(streets_segments_list)
     # find_all_intersections(streets_segments_list)
 
 def get_intersection(segment_1,segment_2):
-    #get intersection of line 1 and line 2 if there is a intersection
-    #if there is no intersection, return None
-    #Input format:
-    #           line1: ([point 1x, point 1y],[point 2x, point 2y])
-    #           line2: ([point 3x, point 3y],[point 4x, point 4y])
-    #Output format:
-    #           [intersection x, intersection y]
     x1 = segment_1.vertex_1.x_coordinate
     y1 = segment_1.vertex_1.y_coordinate
     x2 = segment_1.vertex_2.x_coordinate
@@ -356,8 +289,6 @@ def find_all_intersections_1(streets_segments_list):
     streets_vertices_list_final = []
     streets_segments_list_final_2 = []
     streets_segments_list_final = []
-    print(f"+++++++++++{streets_segments_list}")
-
     streets_segments_list_temp=copy.deepcopy(streets_segments_list)
     # print(streets_segments_list)
     # print(len(streets_segments_list))
@@ -378,7 +309,7 @@ def find_all_intersections_1(streets_segments_list):
                     # print(type(intersection))
                     if intersection is not None:
                         # print(intersection)
-                        print(f"----------------{intersections_list}")
+                        # print(f"----------------{intersections_list}")
                         if intersection not in intersections_list:
                             intersections_list.append(intersection)
                         if intersection not in streets_vertices_list_final:
@@ -409,14 +340,11 @@ def find_all_intersections_1(streets_segments_list):
         streets_segments_list_final_2.append(a)
     return streets_vertices_list_final
 
-
-    print(f"+++++++++++{streets_segments_list}")
 def find_all_intersections_2(streets_segments_list):
     intersections_list=[]
     streets_vertices_list_final = []
     streets_segments_list_final_2 = []
     streets_segments_list_final = []
-    print(f"+++++++++++{streets_segments_list}")
 
     streets_segments_list_temp=copy.deepcopy(streets_segments_list)
     # print(streets_segments_list)
@@ -438,7 +366,6 @@ def find_all_intersections_2(streets_segments_list):
                     # print(type(intersection))
                     if intersection is not None:
                         # print(intersection)
-                        print(f"----------------{intersections_list}")
                         if intersection not in intersections_list:
                             intersections_list.append(intersection)
                         if intersection not in streets_vertices_list_final:
@@ -469,8 +396,6 @@ def find_all_intersections_2(streets_segments_list):
         streets_segments_list_final_2.append(a)
     return streets_segments_list_final_2
 
-
-    print(f"+++++++++++{streets_segments_list}")
 def delete_duplicate(list_of_street_segments):
     l=[]
     for i in list_of_street_segments:
@@ -480,7 +405,6 @@ def delete_duplicate(list_of_street_segments):
 
 def intersection_in_final_segment(intersections_list, streets_segments_list_final):
     streets_segments_list_final_temp=copy.deepcopy(streets_segments_list_final)
-    streets_segments_list_final_min_seg = []
     for i in intersections_list:
         for j in streets_segments_list_final_temp:
             if intersecion_in_line(i,j):
@@ -507,7 +431,6 @@ def intersecion_in_line(intersection,line):
         if (line.vertex_1.y_coordinate==line.vertex_2.y_coordinate and line.vertex_2.y_coordinate==intersection.y_coordinate) and min(line.vertex_1.x_coordinate,line.vertex_2.x_coordinate)<intersection.x_coordinate<max(line.vertex_1.x_coordinate,line.vertex_2.x_coordinate):
             return True
         return False
-
     else:
         if (intersection.y_coordinate - line.vertex_2.y_coordinate) / (
                 line.vertex_1.y_coordinate - line.vertex_2.y_coordinate) == (
@@ -518,6 +441,7 @@ def intersecion_in_line(intersection,line):
             return True
         else:
             return False
+
 def remove_duplicates_intersection(vertices_list):
     final_list=[]
     for i in vertices_list:
@@ -528,26 +452,18 @@ def remove_duplicates_intersection(vertices_list):
                 print(final_list)
     return final_list
 
-
-
 def main():
     input_parser()
     # l=copy.deepcopy(streets_segments_list)
-
-
     # print(streets_vertices_list_final)
     # print(streets_segments_list_final_2)
-
     # print(l)
-
-
-
-
 
     # generate_final_edges(a)
 
+if __name__ == '__main__':
+    main()
 
-main()
 
 """
 input example:
