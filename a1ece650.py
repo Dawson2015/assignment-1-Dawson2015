@@ -137,14 +137,14 @@ def input_parser():
 def generate_a_street(streets_vertices_list_final, streets_segments_list_final_2):
     print("V = {")
     for i in streets_vertices_list_final:
-        print("{0:.2f}_{1:.2f} : {2}".format(i.x_coordinate,i.y_coordinate,i))
         # print(f"{i.x_coordinate}_{i.y_coordinate} : {i}")
+        print("v{0:.0f}{1:.0f}{2:.0f}{3:.0f} : {4}".format(i.x_coordinate,(i.x_coordinate*100%100),i.y_coordinate,i.y_coordinate*100%100, i))
     print("}")
 
     print("E = {")
     for j in streets_segments_list_final_2:
         # print(f"<{j.vertex_1.x_coordinate}_{j.vertex_1.y_coordinate} , {j.vertex_2.x_coordinate}_{j.vertex_2.y_coordinate}>, ")
-        print("<{0:.2f}_{1:.2f} , {2:.2f}_{3:.2f}>,".format(j.vertex_1.x_coordinate,j.vertex_1.y_coordinate,j.vertex_2.x_coordinate,j.vertex_2.y_coordinate))
+        print("<v{0:.0f}{1:.0f}{2:.0f}{3:.0f} , v{4:.0f}{5:.0f}{6:.0f}{7:.0f}>,".format(j.vertex_1.x_coordinate,(j.vertex_1.x_coordinate*100%100),j.vertex_1.y_coordinate,(j.vertex_1.y_coordinate*100%100),j.vertex_2.x_coordinate,(j.vertex_2.x_coordinate*100%100),j.vertex_2.y_coordinate,(j.vertex_2.y_coordinate*100%100)))
     print("}")
 
 def add_a_street_vertices(i):
@@ -152,6 +152,7 @@ def add_a_street_vertices(i):
     while i[k] != '\"':
         k=k+1
     street_name=i[3:k]
+    street_name=street_name.title()
     v=Vertex(1,1)
     sv=Street_vertices(street_name,v)
     sv.delete_a_vertex(v)
@@ -186,6 +187,7 @@ def add_a_street_segments(i):
         k = k + 1
     # type(k)
     street_name = i[3:k]
+    street_name=street_name.title()
     v=Vertex(1,1)
     sv=Street_vertices(street_name,v)
     sv.delete_a_vertex(v)
@@ -249,18 +251,22 @@ def remove_a_street(i):
         k=k+1
     # type(k)
     street_name=i[3:k]
+    street_name=street_name.title()
     # v=Vertex(1,1)
     # sv=Street_vertices(street_name,v)
     # sv.delete_a_vertex(v)
     # print (street_name)
     flag=0
     f=0
+
     for s in range(0,len(streets_vertices_list)):
         # print(s)
         # print(streets_vertices_list)
         if  flag==0 and streets_vertices_list[s].name==street_name:
             streets_vertices_list.remove(streets_vertices_list[s])
             flag=1
+        # else:
+        #     print("Error: 'c' or 'r' specified a street that does not exist.")
     for t in range(0,len(streets_segments_list)):
         if f==0 and streets_segments_list[t].name==street_name:
             streets_segments_list.remove(streets_segments_list[t])
@@ -268,6 +274,18 @@ def remove_a_street(i):
     # print(streets_vertices_list)
     # print(streets_segments_list)
     # find_all_intersections(streets_segments_list)
+def is_right_c_r_command(i):
+    k=3
+    while i[k] != '\"':
+        k=k+1
+    # type(k)
+    street_name=i[3:k]
+    street_name=street_name.title()
+    for x in range(0,len(streets_vertices_list)):
+        if streets_vertices_list[x]==street_name:
+            return True
+        else:
+            return False
 
 def get_intersection(segment_1,segment_2):
     x1 = segment_1.vertex_1.x_coordinate
