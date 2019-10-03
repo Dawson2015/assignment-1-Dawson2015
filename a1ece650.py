@@ -15,7 +15,7 @@ class Vertex(object):
     def __repr__(self):
         return '({0:.2f},{1:.2f})'.format(self.x_coordinate, self.y_coordinate)
     def __eq__(self, other):
-        if self.x_coordinate==other.x_coordinate and self.y_coordinate==other.y_coordinate:
+        if round(self.x_coordinate,2)==round(other.x_coordinate,2) and round(self.y_coordinate,2)==round(other.y_coordinate,2):
             return True
         return False
 class Segment(object):
@@ -110,30 +110,30 @@ streets_vertices_list=[]
 streets_segments_list=[]
 
 def input_parser():
-    prompt="\nPlease input a command line:"
-    prompt+="\nEnter 'q' to end the program.\n"
+    # prompt="\nPlease input a command line:"
+    # prompt+="\nEnter 'q' to end the program.\n"
     i=""
     while i !='q':
         try:
-            i = input(prompt)
+            i = input()
             i = i.strip()
             # a_command_re = re.compile("^a\s*\"(.*)\"\s*(\(.*\))$")
             # a_command_re = re.compile("^a\s\"(.+)\"\s+(\(-?[0-9]+,-?[0-9]+\)\s*)+$")
             # a_command_re = re.compile("^a\s\".+\"\s+((\(\s*-?[0-9]+\s*,\s*-?[0-9]+\s*\))\s*)+\s*$")
-            a_command_re = re.compile("^a\s\".+\"\s+((\(\s*-?([0-9]+.?[0-9]*)\s*,\s*-?([0-9]+.?[0-9]*)+\s*\))\s*)+\s*$")
+            a_command_re = re.compile("^a\s+\".+\"\s+((\(\s*-?([0-9]+.?[0-9]*)\s*,\s*-?([0-9]+.?[0-9]*)+\s*\))\s*)+\s*$")
             # a_command_re = re.compile("^a\s\".+\"\s+((\(.*\))*\s*)+$")
             # c_command_re = re.compile("^c\s*\"(.*)\"\s*(\(.*\))$")
             # c_command_re = re.compile("^c\s\".+\"\s+(\([0-9]+,[0-9]+\)\s*)+$")
             # c_command_re = re.compile("^c\s\".+\"\s+(\(.*\)\s*)+$")
-            c_command_re = re.compile("^c\s\".+\"\s+((\(\s*-?([0-9]+.?[0-9]*)\s*,\s*-?([0-9]+.?[0-9]*)+\s*\))\s*)+\s*$")
+            c_command_re = re.compile("^c\s+\".+\"\s+((\(\s*-?([0-9]+.?[0-9]*)\s*,\s*-?([0-9]+.?[0-9]*)+\s*\))\s*)+\s*$")
             # r_command_re = re.compile("^r\s*\"(.*)\"$")
-            r_command_re = re.compile("^r\s\".+\"\s*$")
+            r_command_re = re.compile("^r\s+\".+\"\s*$")
             g_command_re = re.compile("^g\s*$")
 
 
             if a_command_re.match(i):
                 if is_street_exist(i):
-                    print("Error: This street already exists, can not add it.")
+                    print("Error: street currently exists.")
                 else:
                     add_a_street(i)
             elif c_command_re.match(i):
@@ -151,7 +151,7 @@ def input_parser():
             elif i=='q':
                 sys.exit(0)
             else:
-                print("\nWrong input, input again!!")
+                print("\nError: Incorrect input format")
         except EOFError:
             break
 
@@ -159,21 +159,28 @@ def generate_a_street(streets_vertices_list_final, streets_segments_list_final_2
     print("V = {")
     for i in streets_vertices_list_final:
         # print(f"{i.x_coordinate}_{i.y_coordinate} : {i}")
-        print("v{0:.0f}{1:.0f}{2:.0f}{3:.0f} : {4}".format(i.x_coordinate,(i.x_coordinate*100%100),i.y_coordinate,i.y_coordinate*100%100, i))
+        print(f"<{'%.2f' %i.x_coordinate}_{'%.2f' %i.y_coordinate}> : {i}")
+        # print("v{0:d}{1:.0f}{2:d}{3:.0f} : {4}".format(int(i.x_coordinate),(i.x_coordinate*100%100),int(i.y_coordinate),(i.y_coordinate*100%100), i))
     print("}")
 
     print("E = {")
     for j in streets_segments_list_final_2:
         if not (j.vertex_1.x_coordinate==j.vertex_2.x_coordinate and j.vertex_1.y_coordinate==j.vertex_2.y_coordinate):
             # print(f"<{j.vertex_1.x_coordinate}_{j.vertex_1.y_coordinate} , {j.vertex_2.x_coordinate}_{j.vertex_2.y_coordinate}>, ")
-            print("<v{0:.0f}{1:.0f}{2:.0f}{3:.0f} , v{4:.0f}{5:.0f}{6:.0f}{7:.0f}>,".format(j.vertex_1.x_coordinate,(j.vertex_1.x_coordinate*100%100),j.vertex_1.y_coordinate,(j.vertex_1.y_coordinate*100%100),j.vertex_2.x_coordinate,(j.vertex_2.x_coordinate*100%100),j.vertex_2.y_coordinate,(j.vertex_2.y_coordinate*100%100)))
+            print(
+                f"<{'%.2f' %j.vertex_1.x_coordinate}_{'%.2f' %j.vertex_1.y_coordinate} , {'%.2f' %j.vertex_2.x_coordinate}_{'%.2f' %j.vertex_2.y_coordinate}>, ")
+            # print("<v{0:d}{1:.0f}{2:d}{3:.0f} , v{4:d}{5:.0f}{6:d}{7:.0f}>,".format(int(j.vertex_1.x_coordinate),(j.vertex_1.x_coordinate*100%100),int(j.vertex_1.y_coordinate),(j.vertex_1.y_coordinate*100%100),int(j.vertex_2.x_coordinate),(j.vertex_2.x_coordinate*100%100),int(j.vertex_2.y_coordinate),(j.vertex_2.y_coordinate*100%100)))
     print("}")
 
 def add_a_street_vertices(i):
-    k=3
+    k=0
     while i[k] != '\"':
         k=k+1
-    street_name=i[3:k]
+    x=k+1
+    while i[k+1]!='\"':
+        k+=1
+    y=k+1
+    street_name=i[x:y]
     street_name=street_name.title().strip()
     v=Vertex(1,1)
     sv=Street_vertices(street_name,v)
@@ -204,11 +211,14 @@ def add_a_street_vertices(i):
 
 def add_a_street_segments(i):
     streets_vertices_list_temp = []
-    k = 3
+    k=0
     while i[k] != '\"':
-        k = k + 1
-    # type(k)
-    street_name = i[3:k]
+        k=k+1
+    x=k+1
+    while i[k+1]!='\"':
+        k+=1
+    y=k+1
+    street_name = i[x:y]
     street_name=street_name.title().strip()
     v=Vertex(1,1)
     sv=Street_vertices(street_name,v)
@@ -267,11 +277,14 @@ def change_a_street(i):
     # print(streets_vertices_list)
     # print(streets_segments_list)
 def remove_a_street(i):
-    k=3
+    k=0
     while i[k] != '\"':
         k=k+1
-    # type(k)
-    street_name=i[3:k]
+    x=k+1
+    while i[k+1]!='\"':
+        k+=1
+    y=k+1
+    street_name = i[x:y]
     street_name=street_name.title().strip()
     # v=Vertex(1,1)
     # sv=Street_vertices(street_name,v)
@@ -296,11 +309,14 @@ def remove_a_street(i):
     # print(streets_segments_list)
     # find_all_intersections(streets_segments_list)
 def is_street_exist(i):
-    k=3
+    k=0
     while i[k] != '\"':
         k=k+1
-    # type(k)
-    street_name=i[3:k]
+    x=k+1
+    while i[k+1]!='\"':
+        k+=1
+    y=k+1
+    street_name=i[x:y]
     # print(street_name)
     street_name=street_name.title().strip()
 
@@ -390,7 +406,7 @@ def find_all_intersections_1(streets_segments_list):
     # print(intersections_list)
     # print(streets_vertices_list_final)
     # print(streets_segments_list_final)
-    streets_segments_list_final_final=intersection_in_final_segment(intersections_list,streets_segments_list_final)
+    streets_segments_list_final_final=intersection_in_final_segment(streets_vertices_list_final,streets_segments_list_final)
     temp_list=delete_duplicate(streets_segments_list_final_final)
     for a in temp_list:
         streets_segments_list_final_2.append(a)
@@ -446,7 +462,10 @@ def find_all_intersections_2(streets_segments_list):
     # print(intersections_list)
     # print(streets_vertices_list_final)
     # print(streets_segments_list_final)
-    streets_segments_list_final_final=intersection_in_final_segment(intersections_list,streets_segments_list_final)
+    streets_segments_list_final_final=intersection_in_final_segment(streets_vertices_list_final,streets_segments_list_final)
+    # streets_segments_list_final_final = intersection_in_final_segment(intersections_list, streets_segments_list_final_final)
+    # streets_segments_list_final_final = intersection_in_final_segment(intersections_list,
+    #                                                                   streets_segments_list_final_final)
     temp_list=delete_duplicate(streets_segments_list_final_final)
     for a in temp_list:
         streets_segments_list_final_2.append(a)
@@ -471,10 +490,10 @@ def intersection_in_final_segment(intersections_list, streets_segments_list_fina
 
 def intersecion_in_line(intersection,line):
     # if (intersection.y_coordinate-line.vertex_2.y_coordinate)/(line.vertex_1.y_coordinate-line.vertex_2.y_coordinate)==(intersection.x_coordinate-line.vertex_2.x_coordinate)/(line.verter_1.x_coordinate-line.verterx_2.x_coordinate) and min(line.verter_1.x_coordinate,line.verterx_2.x_coordinate)<intersection.x_coordinate<max(line.verter_1.x_coordinate,line.verterx_2.x_coordinate):
-    try: (intersection.y_coordinate - line.vertex_2.y_coordinate) / (
-            line.vertex_1.y_coordinate - line.vertex_2.y_coordinate) == (
+    try: round(((intersection.y_coordinate - line.vertex_2.y_coordinate) / (
+            line.vertex_1.y_coordinate - line.vertex_2.y_coordinate)),2) == round(((
             intersection.x_coordinate - line.vertex_2.x_coordinate) / (
-            line.vertex_1.x_coordinate - line.vertex_2.x_coordinate) and min(line.vertex_1.x_coordinate,
+            line.vertex_1.x_coordinate - line.vertex_2.x_coordinate)),2) and min(line.vertex_1.x_coordinate,
                                                                               line.vertex_2.x_coordinate) < intersection.x_coordinate < max(
         line.vertex_1.x_coordinate, line.vertex_2.x_coordinate)
     except ZeroDivisionError:
@@ -488,10 +507,10 @@ def intersecion_in_line(intersection,line):
             return True
         return False
     else:
-        if (intersection.y_coordinate - line.vertex_2.y_coordinate) / (
-                line.vertex_1.y_coordinate - line.vertex_2.y_coordinate) == (
+        if round(((intersection.y_coordinate - line.vertex_2.y_coordinate) / (
+                line.vertex_1.y_coordinate - line.vertex_2.y_coordinate)),2) == round(((
                 intersection.x_coordinate - line.vertex_2.x_coordinate) / (
-                line.vertex_1.x_coordinate - line.vertex_2.x_coordinate) and min(line.vertex_1.x_coordinate,
+                line.vertex_1.x_coordinate - line.vertex_2.x_coordinate)),2) and min(line.vertex_1.x_coordinate,
                                                                                   line.vertex_2.x_coordinate) < intersection.x_coordinate < max(
             line.vertex_1.x_coordinate, line.vertex_2.x_coordinate):
             return True
@@ -524,11 +543,8 @@ a "Davenport Road" (1,4) (5,8)
 c "Weber Street" (2,1) (2,2)
 r "King Street S"
 r "Davenport Road"
-
 c "Weber Street" (2,-1) (2, 2) (5, 5) (5,6)(3,8)
-
 a "Weber Street" (2,1) (2,2)
-
 a "a" (3,8) (3,0)
 a "b" (0,2) (4,2)
 a "c" (1,4) (5,4)
