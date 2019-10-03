@@ -159,17 +159,17 @@ def generate_a_street(streets_vertices_list_final, streets_segments_list_final_2
     print("V = {")
     for i in streets_vertices_list_final:
         # print(f"{i.x_coordinate}_{i.y_coordinate} : {i}")
-        print(f"<{'%.2f' %i.x_coordinate}_{'%.2f' %i.y_coordinate}> : {i}")
-        # print("v{0:d}{1:.0f}{2:d}{3:.0f} : {4}".format(int(i.x_coordinate),(i.x_coordinate*100%100),int(i.y_coordinate),(i.y_coordinate*100%100), i))
+        # print(f"<{'%.2f' %i.x_coordinate}_{'%.2f' %i.y_coordinate}> : {i}")
+        print("v{0:d}{1:.0f}{2:d}{3:.0f} : {4}".format(int(i.x_coordinate),(i.x_coordinate*100%100),int(i.y_coordinate),(i.y_coordinate*100%100), i))
     print("}")
 
     print("E = {")
     for j in streets_segments_list_final_2:
         if not (j.vertex_1.x_coordinate==j.vertex_2.x_coordinate and j.vertex_1.y_coordinate==j.vertex_2.y_coordinate):
             # print(f"<{j.vertex_1.x_coordinate}_{j.vertex_1.y_coordinate} , {j.vertex_2.x_coordinate}_{j.vertex_2.y_coordinate}>, ")
-            print(
-                f"<{'%.2f' %j.vertex_1.x_coordinate}_{'%.2f' %j.vertex_1.y_coordinate} , {'%.2f' %j.vertex_2.x_coordinate}_{'%.2f' %j.vertex_2.y_coordinate}>, ")
-            # print("<v{0:d}{1:.0f}{2:d}{3:.0f} , v{4:d}{5:.0f}{6:d}{7:.0f}>,".format(int(j.vertex_1.x_coordinate),(j.vertex_1.x_coordinate*100%100),int(j.vertex_1.y_coordinate),(j.vertex_1.y_coordinate*100%100),int(j.vertex_2.x_coordinate),(j.vertex_2.x_coordinate*100%100),int(j.vertex_2.y_coordinate),(j.vertex_2.y_coordinate*100%100)))
+            # print(
+                # f"<{'%.2f' %j.vertex_1.x_coordinate}_{'%.2f' %j.vertex_1.y_coordinate} , {'%.2f' %j.vertex_2.x_coordinate}_{'%.2f' %j.vertex_2.y_coordinate}>, ")
+            print("<v{0:d}{1:.0f}{2:d}{3:.0f} , v{4:d}{5:.0f}{6:d}{7:.0f}>,".format(int(j.vertex_1.x_coordinate),(j.vertex_1.x_coordinate*100%100),int(j.vertex_1.y_coordinate),(j.vertex_1.y_coordinate*100%100),int(j.vertex_2.x_coordinate),(j.vertex_2.x_coordinate*100%100),int(j.vertex_2.y_coordinate),(j.vertex_2.y_coordinate*100%100)))
     print("}")
 
 def add_a_street_vertices(i):
